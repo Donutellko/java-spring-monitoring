@@ -19,6 +19,7 @@ public class TracingHeadersProvider {
 
 
     private static final String CORRELATION_HEADER_NAME = "baggage";
+    private static final String TRACEPARENT_HEADER_NAME = "traceparent";
 
     @Value("${management.tracing.baggage.correlation.fields}")
     private final List<String> correlationFields;
@@ -28,7 +29,6 @@ public class TracingHeadersProvider {
     public Map<String, String> getTraceHeaders() {
         var tracingContext = braveTracerBridge.currentTraceContext().context();
         var traceId = tracingContext.traceId();
-        var parentId = tracingContext.parentId();
         var spanId = tracingContext.spanId();
 
         var mdcContext = new TreeMap<String, String>(CASE_INSENSITIVE_ORDER);
@@ -40,6 +40,9 @@ public class TracingHeadersProvider {
             .collect(Collectors.joining(","));
 
         var result = new HashMap<>(braveTracerBridge.getAllBaggage());
+
+        var traceparent = String.format("00-%s-%s-01", traceId, spanId);
+        result.put(TRACEPARENT_HEADER_NAME, traceparent);
 
         if (!correlationFieldValue.isBlank()) {
             result.put(CORRELATION_HEADER_NAME, correlationFieldValue);
