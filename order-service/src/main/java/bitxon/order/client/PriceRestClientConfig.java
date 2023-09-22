@@ -1,6 +1,6 @@
 package bitxon.order.client;
 
-import bitxon.order.client.interceptor.RestClientTracingInterceptor;
+import bitxon.order.client.tracing.interceptor.RestClientTracingInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

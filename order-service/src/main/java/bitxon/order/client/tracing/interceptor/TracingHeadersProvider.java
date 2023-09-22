@@ -1,17 +1,13 @@
-package bitxon.order.client.interceptor;
+package bitxon.order.client.tracing.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,7 +15,7 @@ import static java.util.stream.Collectors.toMap;
 
 @Component
 @RequiredArgsConstructor
-public class RestClientTracingInterceptor implements ClientHttpRequestInterceptor {
+public class TracingHeadersProvider {
 
     private static final String CORRELATION_HEADER_NAME = "baggage";
 
@@ -29,27 +25,22 @@ public class RestClientTracingInterceptor implements ClientHttpRequestIntercepto
     @Value("${management.tracing.baggage.remote-fields}")
     private final List<String> remoteFields;
 
-    @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
-        var headers = request.getHeaders();
-        addTraceHeaders(headers);
-        return execution.execute(request, body);
-    }
 
-    void addTraceHeaders(HttpHeaders headers) {
+    public Map<String, String> getTraceHeaders() {
         var mdcContext = MDC.getCopyOfContextMap();
 
         var remoteFieldsValues = remoteFields.stream()
             .collect(toMap(Function.identity(), mdcContext::get));
-        remoteFieldsValues.forEach(headers::add);
 
         var correlationFieldValue = correlationFields.stream()
             .filter(mdcContext::containsKey)
             .map(key -> String.format("%s=%s", key, mdcContext.get(key)))
             .collect(Collectors.joining(","));
 
+        var result = new HashMap<>(remoteFieldsValues);
         if (!correlationFieldValue.isBlank()) {
-            headers.add(CORRELATION_HEADER_NAME, correlationFieldValue);
+            result.put(CORRELATION_HEADER_NAME, correlationFieldValue);
         }
+        return result;
     }
 }
