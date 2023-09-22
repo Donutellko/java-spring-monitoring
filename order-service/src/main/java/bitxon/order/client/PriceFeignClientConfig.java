@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class PriceFeignClientConfig {
-
     @Bean
     public PriceFeignClient priceFeignClient(@Value("${http.price-client.url}") String url,
                                              ApplicationContext appContext) {
