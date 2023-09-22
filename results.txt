@@ -1,0 +1,65 @@
+
+feign-client
+    feign-client WITHOUT interceptor
+        [price-service,650dc325856f105c9a6d31e99df66aa6,9a6d31e99df66aa6, , ]
+
+            host = localhost:8090
+            connection = keep-alive
+            accept = */*
+            user-agent = Java/17.0.7
+
+    feign-client WITH interceptor
+        [price-service,650dcfec0cb0d1ac694745f013e4e360,694745f013e4e360, Ju439a8o1yr4, Web]
+        x-request-id = Ju439a8o1yr4
+        baggage = x-request-id=Ju439a8o1yr4,x-application-id=Web
+        x-application-id = Web
+
+            host = localhost:8090
+            connection = keep-alive
+            accept = */*
+            user-agent = Java/17.0.7
+
+rest-client
+    rest-client WITHOUT interceptor
+        [price-service,650dc32b4e612ba15e6ecf9524ee4a9e,5e6ecf9524ee4a9e, , ]
+
+            host = localhost:8090
+            connection = keep-alive
+            user-agent = Java/17.0.7
+            accept = text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+
+
+    rest-client WITH interceptor
+        [price-service,650dcd10b0d64006dde7a41b0273e040,dde7a41b0273e040, Ju439a8o1yr4, Web]
+        x-request-id = Ju439a8o1yr4
+        baggage = x-request-id=Ju439a8o1yr4,x-application-id=Web
+        x-application-id = Web
+
+            host = localhost:8090
+            connection = keep-alive
+            user-agent = Java/17.0.7
+            accept = text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+
+rest-template
+        [price-service,650dc3295d7a58367433db8f87c00458,99cad0da9605ea24, Ju439a8o1yr4, Web]
+        x-request-id = Ju439a8o1yr4
+        baggage = x-request-id=Ju439a8o1yr4,x-application-id=Web
+        x-application-id = Web
+        traceparent = 00-650dc3295d7a58367433db8f87c00458-8f0b8748a226123b-01
+            host = localhost:8090
+            connection = keep-alive
+            accept = application/json, application/*+json
+            user-agent = Java/17.0.7
+
+
+web-client
+        [price-service,650dc32dbbcac75e7d1cfc43668f6b74,1684939847d77a0f, Ju439a8o1yr4, Web]
+        x-request-id = Ju439a8o1yr4
+        baggage = x-request-id=Ju439a8o1yr4,x-application-id=Web
+        x-application-id = Web
+        traceparent = 00-650dc32dbbcac75e7d1cfc43668f6b74-fbc91d0f72a25f12-01
+            host = localhost:8090
+            accept-encoding = gzip
+            user-agent = ReactorNetty/1.1.10
+            accept = */*
+
