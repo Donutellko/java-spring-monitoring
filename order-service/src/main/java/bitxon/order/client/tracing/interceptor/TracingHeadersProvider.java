@@ -8,9 +8,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import static java.util.stream.Collectors.toMap;
 
 @Component
@@ -27,7 +29,8 @@ public class TracingHeadersProvider {
 
 
     public Map<String, String> getTraceHeaders() {
-        var mdcContext = MDC.getCopyOfContextMap();
+        var mdcContext = new TreeMap<String, String>(CASE_INSENSITIVE_ORDER);
+        mdcContext.putAll(MDC.getCopyOfContextMap());
 
         var remoteFieldsValues = remoteFields.stream()
             .collect(toMap(Function.identity(), mdcContext::get));
